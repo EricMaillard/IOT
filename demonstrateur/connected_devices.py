@@ -127,6 +127,9 @@ class ConnectedDevice():
 		headers = {
 			'Content-Type': 'text/plain; charset=UTF-8'
 		}
+		print(uri+token_query_param)
+		print(headers)
+		print(payload)
 		response = requests.post(uri+token_query_param, headers=headers, verify=True, data=payload)
 		if not response.ok:
 			print(response.text)

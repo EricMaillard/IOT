@@ -11,6 +11,7 @@ import threading
 import requests
 import traceback
 from opentelemetry import trace as OpenTelemetry
+from opentelemetry import trace
 from opentelemetry.trace import Status, StatusCode
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
     OTLPSpanExporter,
@@ -43,7 +44,7 @@ class ConnectedDevice():
 	def manageInstallation(self):
 		tracer = OpenTelemetry.get_tracer_provider().get_tracer("iot-tracer")
 		# waiting for download finished
-		with tracer.start_as_current_span("start Package Installation") as parent:
+		with tracer.start_as_current_span("start Package Installation", kind=trace.SpanKind.SERVER) as parent:
 			parent.set_attribute("device-type", self.device_type)
 			parent.set_attribute("device-model", self.device_model)
 			parent.set_attribute("device-id", self.device_id)
@@ -225,6 +226,9 @@ def send_logs(log_json):
 			'Content-Type': 'application/json; charset=utf-8',
 			'Authorization': 'Api-Token '+dt_settings.get("dynatrace_api_token"),
 		}
+		print(url)
+		print(dtheader)
+		print(log_json)
 		dynatrace_response = requests.post(url, json=log_json, headers=dtheader)
 		if dynatrace_response.status_code >= 400:
 			print(f'Error in Dynatrace log API Response :\n'
@@ -245,6 +249,7 @@ def run_server(settings_file, devices_file):
 
 
 	merged = dict()
+	'''
 	for name in ["dt_metadata_e617c525669e072eebe3d0f08212e8f2.json", "/var/lib/dynatrace/enrichment/dt_metadata.json"]:
 		try:
 			data = ''
@@ -253,7 +258,7 @@ def run_server(settings_file, devices_file):
 			merged.update(data)
 		except:
 			pass
-
+    '''
 	merged.update({
 		"service.name": "iot-software-update", #TODO Replace with the name of your application
 		"service.version": "1.0.0", #TODO Replace with the version of your application
