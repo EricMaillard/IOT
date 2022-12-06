@@ -1,0 +1,58 @@
+{
+	"devices": [
+	  {
+		"device_type" : "treadmill",
+		"device_model" : "DOMYOS T540C",
+		"device_id" : "DOMYOS_T540C_098243",
+		"device_firmware" : "10.0.2"
+	  },
+	  {
+		"device_type" : "treadmill",
+		"device_model" : "DOMYOS T900C",
+		"device_id" : "DOMYOS_T900C_104567",
+		"device_firmware" : "1.0.2"
+	  },
+	  {
+		"device_type" : "treadmill",
+		"device_model" : "REEBOK JET 100X",
+		"device_id" : "DOMYOS_JET_100X_056219",
+		"device_firmware" : "1.0.0.1"
+	  },
+	  {
+		"device_type" : "treadmill",
+		"device_model" : "ADIDAS T-19L",
+		"device_id" : "ADIDAS_T-19L_234243",
+		"device_firmware" : "1.0.0.1"
+	  },
+	  {
+		"device_type" : "bike",
+		"device_model" : "ELOPS 920E",
+		"device_id" : "ELOPS_920E_446719",
+		"device_firmware" : "5.0.4"
+	  },
+	  {
+		"device_type" : "bike",
+		"device_model" : "BH FITNESS i.ZK900",
+		"device_id" : "BH_FITNESS_i.ZK900_027719",
+		"device_firmware" : "5.0.6"
+	  },
+	  {
+		"device_type" : "bike",
+		"device_model" : "PROACTION G2518W",
+		"device_id" : "PROACTION_G2518W_712085",
+		"device_firmware" : "10.1.2"
+	  },
+	  {
+		"device_type" : "watch",
+		"device_model" : "GARMIN FORERUNNER 245",
+		"device_id" : "GARMIN_FORERUNNER_245_761928",
+		"device_firmware" : "8.0.2"
+	  },
+	  {
+		"device_type" : "watch",
+		"device_model" : "KALENJI CW700",
+		"device_id" : "KALENJI_CW700_710397",
+		"device_firmware" : "1.0.2"
+	  }
+	]
+}  

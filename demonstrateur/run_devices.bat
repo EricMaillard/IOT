@@ -1,0 +1,1 @@
+python connected_devices.py connected_devices-settings.json connected_devices.json
