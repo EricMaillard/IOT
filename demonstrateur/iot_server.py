@@ -249,16 +249,6 @@ def run_server(settings_file, devices_file):
 
 
 	merged = dict()
-	'''
-	for name in ["dt_metadata_e617c525669e072eebe3d0f08212e8f2.json", "/var/lib/dynatrace/enrichment/dt_metadata.json"]:
-		try:
-			data = ''
-			with open(name) as f:
-				data = json.load(f if name.startswith("/var") else open(f.read()))
-			merged.update(data)
-		except:
-			pass
-    '''
 	merged.update({
 		"service.name": "iot-software-update", #TODO Replace with the name of your application
 		"service.version": "1.0.0", #TODO Replace with the version of your application
@@ -268,8 +258,6 @@ def run_server(settings_file, devices_file):
 	tracer_provider = TracerProvider(sampler=sampling.ALWAYS_ON, resource=resource)
 	OpenTelemetry.set_tracer_provider(tracer_provider)
 
-	print(dt_settings.get('dynatrace_server_url'))
-	print(dt_settings.get('dynatrace_api_token'))
 	tracer_provider.add_span_processor(
 		BatchSpanProcessor(OTLPSpanExporter(
 			endpoint=dt_settings.get('dynatrace_server_url')+"/api/v2/otlp/v1/traces", #TODO Replace <URL> to your SaaS/Managed-URL as mentioned in the next step
