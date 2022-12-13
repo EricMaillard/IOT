@@ -15,11 +15,12 @@ exit_requested = False
 frequency = 60
 class ConnectedDevice():
 
-	def __init__(self, device_type, device_model, device_id, device_firmware):
+	def __init__(self, device_type, device_model, device_id, device_firmware, device_ip):
 		self.device_type = device_type
 		self.device_model = device_model
 		self.device_id = device_id
 		self.device_firmware = device_firmware
+		self.device_ip = device_ip
 		self.FreeRTOS_load = 0
 		self.FreeRTOS_free_heap = 0
 		self.MQTT_publish_rtt = 0
@@ -33,7 +34,12 @@ class ConnectedDevice():
 		uri = 'http://localhost:5010/iot_server/check_update_available'
 		payload = {
 			'device_model': self.device_model,
-			'device_id': self.device_id
+			'device_id': self.device_id,
+			'device_type': self.device_type,
+			'device_firmware': self.device_firmware,
+			'device_ip': self.device_ip,
+			'event_type' : "checkUpdateAvailable",
+			'message' : "Check update available"
 		}
 
 		try:
@@ -52,7 +58,12 @@ class ConnectedDevice():
 		uri = 'http://localhost:5010/iot_server/request_package'
 		payload = {
 			'device_model': self.device_model,
-			'device_id': self.device_id
+			'device_id': self.device_id,
+			'device_type': self.device_type,
+			'device_firmware': self.device_firmware,
+			'device_ip': self.device_ip,
+			'event_type' : "requestPackage",
+			'message' : "Request package"
 		}
 
 		try:
@@ -70,7 +81,12 @@ class ConnectedDevice():
 		uri = 'http://localhost:5010/iot_server/acknowledge_download'
 		payload = {
 			'device_model': self.device_model,
-			'device_id': self.device_id
+			'device_id': self.device_id,
+			'device_type': self.device_type,
+			'device_firmware': self.device_firmware,
+			'device_ip': self.device_ip,
+			'event_type' : "acknowledgeDownload",
+			'message' : "Acknowledge Download"
 		}
 
 		try:
@@ -89,13 +105,22 @@ class ConnectedDevice():
 		payload = {
 			'device_model': self.device_model,
 			'device_id': self.device_id,
+			'device_type': self.device_type,
+			'device_firmware': self.device_firmware,
+			'device_ip': self.device_ip,
+			'event_type' : "acknowledgeInstallation",
+			'message' : "Acknowledge Installation"
 		}
 		value = randint(0,3)
 		print("value = "+str(value))
 		if value == 1:
 			payload['success'] = False
+			payload['message'] = "Installation failed"
+			payload['error_message'] = "Installation failed"
+			payload['error_code'] = 42
 		else:
 			payload['success'] = True
+			payload['message'] = "Installation OK"
 		try:
 			response = requests.post(uri,headers=head,verify=True, json=payload, timeout=5)
 		except Exception:
@@ -152,7 +177,7 @@ class ConnectedDevice():
 		MQTT_total_received_bytes_delta = randint(1000,5000)
 		self.MQTT_total_received_bytes = self.MQTT_total_received_bytes + MQTT_total_received_bytes_delta
 		self.Uptime = self.Uptime + 60000
-		dimensions = 'device_type="'+self.device_type+'",device_model="'+self.device_model+'",device_id="'+self.device_id+'",device_firmware="'+self.device_firmware+'"'
+		dimensions = 'device_type="'+self.device_type+'",device_model="'+self.device_model+'",device_id="'+self.device_id+'",device_firmware="'+self.device_firmware+'",device_ip="'+self.device_ip+'"'
 		metricsToIngest = ""
 		metricsToIngest = metricsToIngest+ 'iot.decathlon.FreeRTOS_load,'+dimensions+' '+str(self.FreeRTOS_load)+'\n'
 		metricsToIngest = metricsToIngest+ 'iot.decathlon.FreeRTOS_free_heap,'+dimensions+' '+str(self.FreeRTOS_free_heap)+'\n'
@@ -195,7 +220,7 @@ class ConnectedDevice():
 
 	def runDeviceUsageThread(self):
 		global exit_requested
-		multiplicator = 2
+		multiplicator = 5
 		while exit_requested == False:
 			seconds_to_sleep = randint(60*multiplicator, 180*multiplicator)
 			time.sleep(seconds_to_sleep)
@@ -206,6 +231,8 @@ class ConnectedDevice():
 				'device_model': self.device_model,
 				'device_id': self.device_id,
 				'device_type': self.device_type,
+				'device_firmware': self.device_firmware,
+				'device_ip': self.device_ip,
 				'event_type' : "start_run",
 				'message' : "User has started a run"
 			}
@@ -219,6 +246,8 @@ class ConnectedDevice():
 				'device_model': self.device_model,
 				'device_id': self.device_id,
 				'device_type': self.device_type,
+				'device_firmware': self.device_firmware,
+				'device_ip': self.device_ip,
 				'event_type' : "pause_run",
 				'message' : "User takes a pause during run"
 			}
@@ -232,6 +261,8 @@ class ConnectedDevice():
 				'device_model': self.device_model,
 				'device_id': self.device_id,
 				'device_type': self.device_type,
+				'device_firmware': self.device_firmware,
+				'device_ip': self.device_ip,
 				'event_type' : "restart_run",
 				'message' : "User restarts run after a pause"
 			}
@@ -245,11 +276,13 @@ class ConnectedDevice():
 				'device_model': self.device_model,
 				'device_id': self.device_id,
 				'device_type': self.device_type,
+				'device_firmware': self.device_firmware,
+				'device_ip': self.device_ip,
 				'event_type' : "stop_run",
 				'message' : "User stops run"
 			}
 			self.sendUsageData(payload)
-			seconds_to_sleep = randint(800*multiplicator, 2000*multiplicator)
+			seconds_to_sleep = randint(80*multiplicator, 200*multiplicator)
 			time.sleep(seconds_to_sleep)
 		
 def run_devices(settings_file, devices_file):
@@ -267,7 +300,7 @@ def run_devices(settings_file, devices_file):
 	executor = ThreadPoolExecutor(max_workers=2*len(devices))
 
 	for device in devices:
-		connected_device = ConnectedDevice(device.get('device_type'), device.get('device_model'), device.get('device_id'), device.get('device_firmware'))
+		connected_device = ConnectedDevice(device.get('device_type'), device.get('device_model'), device.get('device_id'), device.get('device_firmware'), device.get('device_ip'))
 		executor.submit(connected_device.run)
 		executor.submit(connected_device.runDeviceUsageThread)
 

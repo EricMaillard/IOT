@@ -153,6 +153,19 @@ def request_package():
 			return 'Device not found', 404
 		else:
 			device.setDownloadInProgress()
+			log_json = []
+			log_payload = {
+				"content" : json.dumps(request.json),
+				"iot.device_model" : request.json.get('device_model'),
+				"iot.device_id" : request.json.get('device_id'),
+				"iot.device_firmware" : request.json.get('device_firmware'),
+				"iot.device_ip" : request.json.get('device_ip'),
+				"log.source" : "iot."+request.json.get('device_type'),
+				"severity" : "INFO"
+			}
+			log_json.append(log_payload)
+			send_logs(log_json)
+
 			installationThread = threading.Thread(target=device.manageInstallation)
 			installationThread.start()
 		return '', 200
@@ -172,6 +185,18 @@ def acknowledge_download():
 			print("Device "+device_id+ " not found in device dict")
 			return 'Device not found', 404
 		else:
+			log_json = []
+			log_payload = {
+				"content" : json.dumps(request.json),
+				"iot.device_model" : request.json.get('device_model'),
+				"iot.device_id" : request.json.get('device_id'),
+				"iot.device_firmware" : request.json.get('device_firmware'),
+				"iot.device_ip" : request.json.get('device_ip'),
+				"log.source" : "iot."+request.json.get('device_type'),
+				"severity" : "INFO"
+			}
+			log_json.append(log_payload)
+			send_logs(log_json)
 			device.setInstallationInProgress()
 		return '', 200
 	else:
@@ -190,10 +215,25 @@ def acknowledge_installation():
 			print("Device "+device_id+ " not found in device dict")
 			return 'Device not found', 404
 		else:
+			log_json = []
+			log_payload = {
+				"content" : json.dumps(request.json),
+				"iot.device_model" : request.json.get('device_model'),
+				"iot.device_id" : request.json.get('device_id'),
+				"iot.device_firmware" : request.json.get('device_firmware'),
+				"iot.device_ip" : request.json.get('device_ip'),
+				"log.source" : "iot."+request.json.get('device_type'),
+				"severity" : "INFO"
+			}
 			if request.json.get("success") == True:
 				device.setDeviceUpdated()
+				log_json.append(log_payload)
+				send_logs(log_json)
 			else:
 				device.setFailedUpdate()
+				log_payload['severity'] = "ERROR"
+				log_json.append(log_payload)
+				send_logs(log_json)
 		return '', 200
 	else:
 		abort(400)
@@ -208,6 +248,8 @@ def send_usage_data():
 			"content" : json.dumps(request.json),
 			"iot.device_model" : request.json.get('device_model'),
 			"iot.device_id" : request.json.get('device_id'),
+			"iot.device_firmware" : request.json.get('device_firmware'),
+			"iot.device_ip" : request.json.get('device_ip'),
 			"log.source" : "iot."+request.json.get('device_type'),
 			"severity" : "INFO"
 		}
