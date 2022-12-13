@@ -1,0 +1,12 @@
+{
+	"dynatrace_server_url" :"https://zqt09306.live.dynatrace.com",
+	"dynatrace_api_token" : "",
+	"ssl_verify" : true,
+	"beaconEndpointURL" : "https://bf62059ukh.bf.dynatrace.com/mbeacon",
+	"applicationID" : "24828f48-d581-4cd1-a2c9-76ef2e16e22e",
+    "log_sources_to_query" : "log.source=\"iot.treadmill\"",
+    "device_id" : "iot.device_id",
+    "ip_address" : "iot.device_ip",
+    "operating_system" : "treadmill",
+    "log_level": "INFO"
+}
