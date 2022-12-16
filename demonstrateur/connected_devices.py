@@ -12,7 +12,6 @@ head = {
     'Content-Type': 'application/json; charset=UTF-8',
 }
 exit_requested = False
-frequency = 60
 class ConnectedDevice():
 
 	def __init__(self, device_type, device_model, device_id, device_firmware, device_ip):
@@ -162,6 +161,7 @@ class ConnectedDevice():
 
 	def manageMetrics(self):
 		# increment metric values
+		global dt_settings
 		self.FreeRTOS_load = uniform(1.0, 5.0)
 		self.FreeRTOS_free_heap = randint(500000, 600000)
 		self.MQTT_publish_rtt = uniform(1.0, 5.0)
@@ -176,7 +176,7 @@ class ConnectedDevice():
 		self.MQTT_total_sent_bytes = self.MQTT_total_sent_bytes + MQTT_total_sent_bytes_delta
 		MQTT_total_received_bytes_delta = randint(1000,5000)
 		self.MQTT_total_received_bytes = self.MQTT_total_received_bytes + MQTT_total_received_bytes_delta
-		self.Uptime = self.Uptime + 60000
+		self.Uptime = self.Uptime + 60000*dt_settings.get('metric_frequency')
 		dimensions = 'device_type="'+self.device_type+'",device_model="'+self.device_model+'",device_id="'+self.device_id+'",device_firmware="'+self.device_firmware+'",device_ip="'+self.device_ip+'"'
 		metricsToIngest = ""
 		metricsToIngest = metricsToIngest+ 'iot.decathlon.FreeRTOS_load,'+dimensions+' '+str(self.FreeRTOS_load)+'\n'
@@ -192,7 +192,7 @@ class ConnectedDevice():
 	def run(self):
 		global exit_requested
 		print("run device : device_model = "+self.device_model+", device_id = "+self.device_id)
-
+		frequency = dt_settings.get('metric_frequency')
 		while exit_requested == False:
 			try:
 				querytime = dt.utcnow()
@@ -207,20 +207,20 @@ class ConnectedDevice():
 					self.acknowledgeInstallation()
 				# wait until next minute
 				currenttime = dt.utcnow()
-				next_time = querytime + timedelta(seconds=frequency)
+				next_time = querytime + timedelta(seconds=frequency*60)
 				delta = next_time - currenttime
 				if delta.total_seconds() > 0:
 					time.sleep(delta.total_seconds())
 			except Exception as e:
 				print(traceback.format_exc())
-				next_time = querytime + timedelta(seconds=frequency)
+				next_time = querytime + timedelta(seconds=frequency*60)
 				delta = next_time - currenttime
 				if delta.total_seconds() > 0:
 					time.sleep(delta.total_seconds())
 
 	def runDeviceUsageThread(self):
 		global exit_requested
-		multiplicator = 5
+		multiplicator = dt_settings.get('multiplicator')
 		while exit_requested == False:
 			seconds_to_sleep = randint(60*multiplicator, 180*multiplicator)
 			time.sleep(seconds_to_sleep)
@@ -282,7 +282,7 @@ class ConnectedDevice():
 				'message' : "User stops run"
 			}
 			self.sendUsageData(payload)
-			seconds_to_sleep = randint(80*multiplicator, 200*multiplicator)
+			seconds_to_sleep = randint(500*multiplicator, 3000*multiplicator)
 			time.sleep(seconds_to_sleep)
 		
 def run_devices(settings_file, devices_file):

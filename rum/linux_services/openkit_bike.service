@@ -1,0 +1,15 @@
+[Unit]
+Description=Service to send demo HIP order flow traces to Dynatrace
+After=nss-user-lookup.target
+
+[Service]
+Type=simple
+User=dtuser
+Group=dtuser
+WorkingDirectory=/opt/dynatrace/IOT/rum
+ExecStart= /bin/sh /opt/dynatrace/IOT/rum/run_openkit_bike.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

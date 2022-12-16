@@ -1,0 +1,15 @@
+[Unit]
+Description=Service to send demo HIP order flow traces to Dynatrace
+After=nss-user-lookup.target
+
+[Service]
+Type=simple
+User=dtuser
+Group=dtuser
+WorkingDirectory=/opt/dynatrace/IOT/demonstrateur
+ExecStart= /usr/bin/python3 /opt/dynatrace/IOT/demonstrateur/connected_devices.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

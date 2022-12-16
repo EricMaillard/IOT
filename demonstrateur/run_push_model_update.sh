@@ -1,0 +1,1 @@
+python3 push_model_update.py connected_devices.json

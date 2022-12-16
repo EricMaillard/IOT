@@ -1,0 +1,1 @@
+java -cp "webapp_openkit/build/webapp_openkit.jar;webapp_openkit/lib/openkit-0.2-java8.jar;webapp_openkit/lib/httpclient-4.5.6.jar;webapp_openkit/lib/httpcore-4.4.10.jar;webapp_openkit/lib/commons-logging-1.2.jar;webapp_openkit/lib/commons-codec-1.10.jar;webapp_openkit/lib/json-simple-1.1.1.jar" com.webapp_openkit.IOTUserExperience "settings_openkit_watch.json" 
