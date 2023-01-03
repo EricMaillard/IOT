@@ -164,12 +164,12 @@ def request_package():
 			log_json = []
 			log_payload = {
 				"content" : json.dumps(request.json),
-				"iot.device_model" : request.json.get('device_model'),
-				"iot.device_id" : request.json.get('device_id'),
-				"iot.device_firmware" : request.json.get('device_firmware'),
-				"iot.device_ip" : request.json.get('device_ip'),
+				"device_model" : request.json.get('device_model'),
+				"device_id" : request.json.get('device_id'),
+				"device_firmware" : request.json.get('device_firmware'),
+				"device_ip" : request.json.get('device_ip'),
+				"device_type" : request.json.get('device_type'),
 				"log.source" : "iot."+request.json.get('device_type'),
-				"dt.source_entity" : dt_device_id,
 				"severity" : "INFO"
 			}
 			log_json.append(log_payload)
@@ -203,12 +203,12 @@ def acknowledge_download():
 			log_json = []
 			log_payload = {
 				"content" : json.dumps(request.json),
-				"iot.device_model" : request.json.get('device_model'),
-				"iot.device_id" : request.json.get('device_id'),
-				"iot.device_firmware" : request.json.get('device_firmware'),
-				"iot.device_ip" : request.json.get('device_ip'),
+				"device_model" : request.json.get('device_model'),
+				"device_id" : request.json.get('device_id'),
+				"device_firmware" : request.json.get('device_firmware'),
+				"device_ip" : request.json.get('device_ip'),
+				"device_type" : request.json.get('device_type'),
 				"log.source" : "iot."+request.json.get('device_type'),
-				"dt.source_entity" : dt_device_id,
 				"severity" : "INFO"
 			}
 			log_json.append(log_payload)
@@ -240,12 +240,12 @@ def acknowledge_installation():
 			log_json = []
 			log_payload = {
 				"content" : json.dumps(request.json),
-				"iot.device_model" : request.json.get('device_model'),
-				"iot.device_id" : request.json.get('device_id'),
-				"iot.device_firmware" : request.json.get('device_firmware'),
-				"iot.device_ip" : request.json.get('device_ip'),
+				"device_model" : request.json.get('device_model'),
+				"device_id" : request.json.get('device_id'),
+				"device_firmware" : request.json.get('device_firmware'),
+				"device_ip" : request.json.get('device_ip'),
+				"device_type" : request.json.get('device_type'),
 				"log.source" : "iot."+request.json.get('device_type'),
-				"dt.source_entity" : dt_device_id,
 				"severity" : "INFO"
 			}
 			if request.json.get("success") == True:
@@ -275,12 +275,12 @@ def send_usage_data():
 		log_json = []
 		log_payload = {
 			"content" : json.dumps(request.json),
-			"iot.device_model" : request.json.get('device_model'),
-			"iot.device_id" : request.json.get('device_id'),
-			"iot.device_firmware" : request.json.get('device_firmware'),
-			"iot.device_ip" : request.json.get('device_ip'),
+			"device_model" : request.json.get('device_model'),
+			"device_id" : request.json.get('device_id'),
+			"device_firmware" : request.json.get('device_firmware'),
+			"device_ip" : request.json.get('device_ip'),
+			"device_type" : request.json.get('device_type'),
 			"log.source" : "iot."+request.json.get('device_type'),
-			"dt.source_entity" : dt_device_id,
 			"severity" : "INFO"
 		}
 		log_json.append(log_payload)
